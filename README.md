@@ -1,24 +1,17 @@
-# CyberArk Conjur Secrets Manager AWS EKS Integration Lab 2021
-This is a tutorial share to you on how to secure secrets of AWS EKS applications by CyberArk Secrets Manager Conjur. We will cover deploying Conjur Master, Conjur follower instances with follower seed fetcher. Conjur Secretless Broker & inital container will also be covered in this tutorial.
-For more detail about CyberArk Conjur Secrets Manager, please visit the two websites
+# CyberArk PAS AWS STS INTEGRATION 2021
+This is a tutorial share to you on how to provide a secure access to the AWS consoles using Cyberark AWS STS Integration.
+For more detail about CyberArk AWS STS Integration, please visit below mentioned website.
 
-- [CyberArk Conjur Secrets Manager Enterprise](https://www.cyberark.com/products/secrets-manager-enterprise/)
-- [CyberArk Conjur Online Docs](https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/Latest/en/Content/Get%20Started/WhatIsConjur.html)
+- [CyberArk AWS STS Integration](https://docs.cyberark.com/Product-Doc/OnlineHelp/PAS/Latest/en/Content/PASIMP/PSM-AWS-CloudServicesManagement.htm?TocPath=Administration%7CComponents%7CPrivileged%20Session%20Manager%7CPSM%20Connectors%7CCloud%20Services%20Management%20Tools%7C_____1)
 
-## Lab Guide Version
+## Guide Version
 - Version 1.0
-- Release Date 10 March 2021
+- Release Date 10 June 2021
 
 ## Prerequisite
-- You passed CyberArk CDE or CPE Conjur Pro2
-- You completed CyberArk Conjur Fundamentals Course
-- You have basic understanding Linux installation and administration
-- You have basic understanding Docker
-- You have basic understanding MySQL Administration
-- You have basic understanding AWS configuration and administration
-  - For setup the lab, you better knew how to config EC2, VPC, AWS Route 53, Security Group and Amazon ECR 
-- You have basic understanding AWS EKS Kubernetes setup and administration
-
+- You should have access to Cyberark PAM
+- You should have access to the AWS IAM Service
+ 
 ## Lab Architecture
 - EKS is used as platform to host the [demo app](https://github.com/jeepapichet/cityapp). The application will connect to a MySQL database to retreive data, and during authenication, [secrets](https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/Latest/en/Content/Get%20Started/key_concepts/secrets.html) will be used by the application
 - The lab was based on Conjur Version 12.0.0
@@ -26,7 +19,7 @@ For more detail about CyberArk Conjur Secrets Manager, please visit the two webs
 ![Architecture](https://github.com/ivanckleecity/CyberArk-DAP-EKS-Lap-2021/blob/main/images/architecture_eks.JPG)
 
 ## Lab Guide
-- Task 0 to 1 is to create AWS envirunment to run the Jump Host
+- Task 0 to 1 is to setup the AWS environment to enable the logon and 
 - Task 2 to 4 is to create an EKS envirunment to run contrainer application to access an external Database. The External Database will be seating in your Jump Host
 - Task 5 to 8 is to setup CyberArk Conjur Secrets Manager to protect containerized applications and DevOps tools secure access to resources. The lab will show case how to setup and use CyberArk Summon and Secretless Broker 
 
