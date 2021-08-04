@@ -1,45 +1,94 @@
-# CyberArk PAS AWS STS INTEGRATION 2021
-This is a tutorial share to you on how to provide a secure access to the AWS consoles using Cyberark AWS STS Integration.
-For more detail about CyberArk AWS STS Integration, please visit below mentioned website.
-
-- [CyberArk AWS STS Integration](https://docs.cyberark.com/Product-Doc/OnlineHelp/PAS/Latest/en/Content/PASIMP/PSM-AWS-CloudServicesManagement.htm?TocPath=Administration%7CComponents%7CPrivileged%20Session%20Manager%7CPSM%20Connectors%7CCloud%20Services%20Management%20Tools%7C_____1)
-
-## Guide Version
-- Version 1.0
-- Release Date 10 June 2021
-
-## Prerequisite
-- You should have access to Cyberark PAM
-- You should have access to the AWS IAM Service
+Cyberark STS Plugin Integration with AWS
+In this short step by step guide, we will see how Cyberark STS Plugin can be used to provide secure AWS console access to different group of privilege users.
+I believe STS plugin is one of the best approaches what all the customer should leverage upon due to following reasons-
+1.	No need to create multiple user identity on AWS IAM
+2.	No credentials involved (Cyberark STS plugin involves the use of logon account)
+3.	Provide JIT access to any of the given privilege users which will be tied to the granular roles or have specific set of permissions
+We have divided the entire configuration into 3 main stages.
+1.	Creation and On-Boarding of the STS logon account
+a.	Go to AWS IAM Service and then click on to add new user
  
-## Lab Architecture
-- EKS is used as platform to host the [demo app](https://github.com/jeepapichet/cityapp). The application will connect to a MySQL database to retreive data, and during authenication, [secrets](https://docs.cyberark.com/Product-Doc/OnlineHelp/AAM-DAP/Latest/en/Content/Get%20Started/key_concepts/secrets.html) will be used by the application
-- The lab was based on Conjur Version 12.0.0
 
-![Architecture](https://github.com/ivanckleecity/CyberArk-DAP-EKS-Lap-2021/blob/main/images/architecture_eks.JPG)
+b.	Proceed without assigning any policy or permissions.
+ 
+c.	Click on create user and note down the User, Access key ID and Secret Access Key.
+ 
+d.	We will create new policy where we will assign enough permission to the AWSSTSLogonAccount to verify and rotate the access keys as per the Organization security policy.
+e.	Go to IAM policies and click create Policy. Note down the 4 permissions what we require and also on the resource section, we are restricting this policy to be able to perform all these 4 actions against the AWSTSLogonAccount only.
 
-## Lab Guide
-- Task 0 to 1 is to setup the AWS environment to enable the logon and 
-- Task 2 to 4 is to create an EKS envirunment to run contrainer application to access an external Database. The External Database will be seating in your Jump Host
-- Task 5 to 8 is to setup CyberArk Conjur Secrets Manager to protect containerized applications and DevOps tools secure access to resources. The lab will show case how to setup and use CyberArk Summon and Secretless Broker 
+ 
+
+f.	Assign a policy name and in my case, it is named as AWSTSLogonPolicy
+ 
+g.	Assign the policy created in previous step to AWSSTSLogonAccount
+  
+
+h.	All steps have been completed on the AWS side and now we will on-board the AWSSTSLogonAccount on Cyberark. We shall be on-boarding this account manually, but it can be on-boarded using automated manner.
+i.	Login into Cyberark using the appropriate credentials who shall be authorized to on-board new accounts
+j.	Go to Platform Management and enable the Amazon Web Services-AWS-Access keys platform under Cloud Service.
+k.	In my case, we will duplicate the AWS-Access Keys platform and name it as an AWS-STS-Access-Logon Account.
+ 
+
+l.	Create one additional safe and in my case, I have created additional safe named AWSCloud Console STS account and assigned appropriate members.
+j.  Add new account. And then select few parameters as mentioned below.
+S.No.		
+1.		System Type	Cloud
+2.		Select Platform 	AWS-STS-Access-Logon
+3.		Select Safe	AWS Cloud Console STS Account
+4.		IAM Username 	AWSSTSLogonAccount
+5.		AWS Access Key Secret	XXXX (You have noted down this while configuring new user on AWS)
+6.		AWS Access Key ID	XXXX (You have noted down this while configuring new user on AWS)
+7.		AWS Account Number	Key in your AWS Account number
+8.		AWS Account Alias	AWS STS Logon Account (You can choose anything)
+ 
+k. Once the new account has been added, we will perform 2 steps. i.e. verify and change. Once it’s completed, then we will move to the next step.
+ 
+
+2.	Creation of  roles in AWS and assigning of those roles within Cyberark 
+a.	Create 2 different roles. One is for EC2Administrator access and second one is for S3Full access. 
+b.	Here are the steps on how to setup access for EC2Administrator access. Trust that any entity within your account can use this role.
+ 
+
+ 
+
+ 
 
 
-### [Task 0: Setup Jump Host](00-Setup_Jump_Host.md)
+c.	Below mentioned is how the role should look like for S3Fullaccess
+ 
 
-### [Task 1: Install Necessary Software in Jump Host](01-Install_Necessary_Software.md)
+d.	Once the role assignment has been done, then we will configure the policy so that AWSSTSLogonAccount should be able to assume these 2 roles.
+e.	Below mentioned is some of the permissions required and we have to make sure that these permissions being restricted to assume the role defined at earlier steps.
+ 
+f.	Configuration has been completed on AWS side. Now it’s the time to setup the appropriate configuration on Cyberark.
+g.	Logon to the Cyberark again and make sure that Amazon Web Services-AWS platform has been enabled
+h.	We can create another safe from best practices perspective and to have better role-based access control. But in my case, I shall leverage upon the same safe as we used before to store AWS STS Logon Account keys.
+i.  Add new account. And then select few parameters as mentioned below.
+S.No.	Parameters	Settings
+1.		System Type	Cloud
+2.		Select Platform 	Amazon Web Services-AWS
+3.		Select Safe	AWS Cloud Console STS Account
+4.		IAM Username 	EC2Fullaccess (Can be anything)
+5.		AWS Role	arn:aws:iam::19XXXX:role/AWSEC2fullaccessSTS (This is how it should look like)
+6.		AWS Account Number	Key in your AWS Account number
+7.		AWS Account Alias	EC2 FullAccess (You can choose anything)
+8.		Associate Logon Account	AWS STS Logon Account (Created in Step 1)
 
-### [Task 2: Create EKS Cluster](02-Create_EKS_Cluster.md)
+j. Similarly add one more account. And then select few parameters as mentioned below.
+S.No.	Parameters	Settings
+1.		System Type	Cloud
+2.		Select Platform 	Amazon Web Services-AWS
+3.		Select Safe	AWS Cloud Console STS Account
+4.		IAM Username 	S3Fullaccess (Can be anything)
+5.		AWS Role	arn:aws:iam::19XXXX:role/AWSS3fullaccessSTS (This is how it should look like)
+6.		AWS Account Number	Key in your AWS Account number
+7.		AWS Account Alias	S3 FullAccess (You can choose anything)
+8.		Associate Logon Account	AWS STS Logon Account (Created in Step 1)
 
-### [Task 3: Setup DataBase Server](03-Setup_DataBase_Server.md)
+3.	As a last step, authorized user can simply click on the connect button for the given configured EC2FullAccess or S3FullAccess account.
+I.	You will see that there is no password configured or required for the STS access.
+ 
 
-### [Task 4: Deploy App with Embedded Secret](04-Deploy_App_with_Embedded_Secret.md)
+ii. Once you click on connect button then RDP file going to get downloaded. From there, user will be able to access to the AWS Console via Cyberark jumphost. Below mentioned is the screenshot from my setup
+ 
 
-### [Task 5: Setup Conjur Master Server](05-Setup_Conjur_Master.md)
-
-### [Task 6: Deploy Follower with Seed Fetcher](06-Deploy_Follower_with_Seed_Fetcher.md)
-
-### [Task 7: Deploy App to EKS Cluster with CyberArk Summon Secrets Injection](07-Deploy_App_with_Summon_Secrets_Injects.md)
-
-### [Task 8: Deploy App to EKS Cluster with CyberArk Secretless Broker](08-Deploy_App_with_Cyberark_Secretless_Broker.md)
-
-### [Congratulation!!! Lab Completed](Task09/readme.md)  
