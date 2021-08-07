@@ -85,6 +85,24 @@ h.	We can create another safe from best practices perspective and to have better
 
 i.  Add new account. And then select few parameters as mentioned below.
 
+![table1](https://user-images.githubusercontent.com/60601287/128582071-a9d33b9c-3347-43cb-9a55-78d74ffa8d3e.PNG)
+
+j. Similarly add one more account. And then select few parameters as mentioned below.
+
+![table2](https://user-images.githubusercontent.com/60601287/128582107-0844de9f-0ae3-4e4a-9cd9-36a912a38331.PNG)
+
+3.	As a last step, authorized user can simply click on the connect button for the given configured EC2FullAccess or S3FullAccess account.
+I.	You will see that there is no password configured or required for the STS access.
+
+![picturecyberark](https://user-images.githubusercontent.com/60601287/128582143-19db19be-8c9d-444a-9cf2-68355563681e.png)
+
+ii. Once you click on connect button then RDP file going to get downloaded. From there, user will be able to access to the AWS Console via Cyberark jumphost. Below mentioned is the screenshot from my setup
+
+![awsconsolepicture2](https://user-images.githubusercontent.com/60601287/128582174-1a3b1ebe-9878-4341-aa50-f4b90dbc9459.png)
+
+
+
+
 
 
 
