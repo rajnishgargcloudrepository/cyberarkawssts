@@ -9,7 +9,7 @@ I believe STS plugin is one of the best approaches what all the customer should 
 
 We have divided the entire configuration into 3 main stages.
 
-1.	Creation and On-Boarding of the STS logon account
+## 1.	Creation and On-Boarding of the STS logon account
   
  a.	Go to AWS IAM Service and then click on to add new user
  
@@ -55,7 +55,7 @@ k. Once the new account has been added, we will perform 2 steps. i.e. verify and
 
 ![LogonAccountPicture](https://user-images.githubusercontent.com/60601287/128141621-b485f41e-4f29-4524-90e6-9a6ec3f6e323.png)
 
-2.	Creation of  roles in AWS and assigning of those roles within Cyberark 
+## 2.	Creation of  roles in AWS and assigning of those roles within Cyberark 
 
 a.	Create 2 different roles. One is for EC2Administrator access and second one is for S3Full access. 
 
@@ -91,7 +91,7 @@ j. Similarly add one more account. And then select few parameters as mentioned b
 
 ![table2](https://user-images.githubusercontent.com/60601287/128582107-0844de9f-0ae3-4e4a-9cd9-36a912a38331.PNG)
 
-3.	As a last step, authorized user can simply click on the connect button for the given configured EC2FullAccess or S3FullAccess account.
+## 3.	As a last step, authorized user can simply click on the connect button for the given configured EC2FullAccess or S3FullAccess account.
 I.	You will see that there is no password configured or required for the STS access.
 
 ![picturecyberark](https://user-images.githubusercontent.com/60601287/128582143-19db19be-8c9d-444a-9cf2-68355563681e.png)
