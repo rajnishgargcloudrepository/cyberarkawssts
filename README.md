@@ -1,4 +1,4 @@
-Cyberark STS Plugin Integration with AWS
+# Cyberark STS Plugin Integration with AWS
 
 In this short step by step guide, we will see how Cyberark STS Plugin can be used to provide secure AWS console access to different group of privilege users.
 
